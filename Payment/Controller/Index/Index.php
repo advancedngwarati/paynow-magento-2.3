@@ -230,8 +230,10 @@ class Index extends \Magento\Framework\App\Action\Action
 		$this->updateTransactionInfo($order_id, $params);
 		$order = $this->_order->load($order_id);
 		$order->load($order_id);
-		$order->setState(\Magento\Sales\Model\Order::STATE_PROCESSING, true, 'Payment received.');
-		$order->setStatus("Processing", true);
+		$comment = 'Payment has been processed successfully';
+		$order->setState(\Magento\Sales\Model\Order::STATE_PAYMENT_REVIEW, true);
+		$order->setStatus(\Magento\Sales\Model\Order::STATE_PAYMENT_REVIEW, true);
+		$order->addStatusToHistory(\Magento\Sales\Model\Order::STATE_PAYMENT_REVIEW, $comment);
 		$order->save();
 		$this->_redirect('checkout/onepage/success', array('_secure'=>true));
 	}
